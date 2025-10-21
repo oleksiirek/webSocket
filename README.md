@@ -25,7 +25,7 @@ A production-ready WebSocket notification server built with FastAPI that provide
 1. **Clone the repository**:
    ```bash
    git clone <repository-url>
-   cd websocket-notification-server
+   cd webSocket
    ```
 
 2. **Install dependencies**:
