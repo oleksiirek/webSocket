@@ -1,0 +1,17 @@
+# Development dependencies
+pytest>=8.4.2
+pytest-asyncio>=0.24.0
+pytest-cov>=6.0.0
+websocket-client>=1.8.0
+httpx>=0.28.1
+psutil>=7.1.1
+
+# Code quality tools
+black>=24.10.0
+ruff>=0.14.1
+mypy>=1.13.0
+pre-commit>=4.0.1
+
+# Development utilities
+ipython>=8.18.0
+ipdb>=0.13.13
