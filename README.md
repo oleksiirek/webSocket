@@ -28,7 +28,13 @@ A production-ready WebSocket notification server built with FastAPI that provide
    cd webSocket
    ```
 
-2. **Install dependencies**:
+2. **Create and activate virtual environment**:
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+   ```
+
+3. **Install dependencies**:
    ```bash
    pip install -r requirements.txt
    ```
@@ -36,8 +42,8 @@ A production-ready WebSocket notification server built with FastAPI that provide
 3. **Create environment configuration**:
    ```bash
    cp .env.example .env
-   # Edit .env with your configuration
    ```
+   *Edit .env with your configuration
 
 4. **Run the server**:
    ```bash
@@ -54,10 +60,10 @@ The server will start on `http://localhost:8000` by default.
 ```bash
 python main.py --dev
 ```
-- Enables auto-reload on code changes
 - Debug logging enabled
 - Single worker process
 - API documentation available at `/docs`
+- Auto-reload disabled for proper graceful shutdown
 
 #### Production Mode
 ```bash
@@ -188,7 +194,7 @@ HEALTH_CHECK_ENABLED=true
 
 1. **Build the image**:
    ```bash
-   docker build -t websocket-notification-server .
+   docker build -t webSocket .
    ```
 
 2. **Run with Docker Compose**:
@@ -313,7 +319,13 @@ Key metrics available:
 
 ### Setting up Development Environment
 
-1. **Install development dependencies**:
+1. **Create and activate virtual environment**:
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+   ```
+
+2. **Install development dependencies**:
    ```bash
    pip install -r requirements.txt
    pip install -e .

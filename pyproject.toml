@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "websocket-notification-server"
+name = "webSocket"
 version = "0.1.0"
 description = "Production-ready WebSocket notification server built with FastAPI"
 readme = "README.md"
@@ -50,9 +50,9 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/example/websocket-notification-server"
-Repository = "https://github.com/example/websocket-notification-server.git"
-Issues = "https://github.com/example/websocket-notification-server/issues"
+Homepage = "https://github.com/example/webSocket"
+Repository = "https://github.com/example/webSocket.git"
+Issues = "https://github.com/example/webSocket/issues"
 
 [project.scripts]
 websocket-server = "websocket_server.main:main"
@@ -129,7 +129,10 @@ markers = [
     "slow: marks tests as slow (deselect with '-m \"not slow\"')",
     "integration: marks tests as integration tests",
     "unit: marks tests as unit tests",
+    "performance: marks tests as performance tests",
+    "stress: marks tests as stress tests",
 ]
+
 
 [tool.coverage.run]
 source = ["websocket_server"]

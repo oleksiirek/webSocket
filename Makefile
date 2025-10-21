@@ -51,7 +51,7 @@ format:
 
 # Docker commands
 docker-build:
-	docker build -t websocket-notification-server .
+	docker build -t webSocket .
 
 docker-run:
 	docker-compose up -d
@@ -113,6 +113,6 @@ setup-dev: install
 
 # Build and push Docker image (for CI/CD)
 docker-release: docker-build
-	docker tag websocket-notification-server:latest websocket-notification-server:$(VERSION)
-	# docker push websocket-notification-server:$(VERSION)
-	# docker push websocket-notification-server:latest
+	docker tag webSocket:latest webSocket:$(VERSION)
+	# docker push webSocket:$(VERSION)
+	# docker push webSocket:latest

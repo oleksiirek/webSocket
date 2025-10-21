@@ -54,7 +54,7 @@ docker-compose up -d
 #### Build and Run
 ```bash
 # Build image
-docker build -t websocket-notification-server .
+docker build -t webSocket .
 
 # Run container
 docker run -d \

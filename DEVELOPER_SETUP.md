@@ -77,7 +77,7 @@ make docker-stop   # Stop containers
 
 ## Project Structure
 ```
-websocket-notification-server/
+webSocket/
 ├── websocket_server/          # Main application code
 │   ├── config/               # Configuration management
 │   ├── endpoints/            # HTTP and WebSocket endpoints
