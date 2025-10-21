@@ -6,9 +6,11 @@ import sys
 from datetime import datetime
 
 import aiohttp
+import pytest
 import websockets
 
 
+@pytest.mark.asyncio
 async def test_health_endpoint():
     """Test the health check endpoint."""
     print("🔍 Testing health endpoint...")
@@ -27,6 +29,7 @@ async def test_health_endpoint():
         return False
 
 
+@pytest.mark.asyncio
 async def test_websocket_connection():
     """Test WebSocket connection and message exchange."""
     print("🔍 Testing WebSocket connection...")
@@ -63,6 +66,7 @@ async def test_websocket_connection():
         return False
 
 
+@pytest.mark.asyncio
 async def test_notification_endpoint():
     """Test the notification broadcast endpoint."""
     print("🔍 Testing notification endpoint...")
@@ -93,6 +97,7 @@ async def test_notification_endpoint():
         return False
 
 
+@pytest.mark.asyncio
 async def test_metrics_endpoint():
     """Test the metrics endpoint."""
     print("🔍 Testing metrics endpoint...")
@@ -111,6 +116,7 @@ async def test_metrics_endpoint():
         return False
 
 
+@pytest.mark.asyncio
 async def test_prometheus_metrics_endpoint():
     """Test the Prometheus metrics endpoint."""
     print("🔍 Testing Prometheus metrics endpoint...")

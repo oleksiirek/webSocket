@@ -7,6 +7,8 @@ import signal
 import sys
 from pathlib import Path
 
+import pytest
+
 # Add project root to path
 project_root = Path(__file__).parent
 sys.path.insert(0, str(project_root))
@@ -16,6 +18,7 @@ from websocket_server.app import app
 from websocket_server.config import setup_logging
 
 
+@pytest.mark.asyncio
 async def test_server_startup():
     """Test that the server can start without logging errors."""
     try:
