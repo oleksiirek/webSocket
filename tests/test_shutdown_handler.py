@@ -66,16 +66,28 @@ class TestShutdownHandler:
                 assert shutdown_handler._shutdown_start_time is not None
                 mock_create_task.assert_called_once()
 
-    def test_signal_handler_second_signal(self, shutdown_handler):
-        """Test signal handler on second signal (force exit)."""
+    def test_signal_handler_second_signal(self):
+        """Test signal handler on second signal (ignores duplicate)."""
+        # Create a shutdown handler with regular mocks to avoid async issues
+        mock_connection_manager = MagicMock()
+        mock_notification_service = MagicMock()
+        handler = ShutdownHandler(mock_connection_manager, mock_notification_service)
+        
         # Set shutdown as already requested
-        shutdown_handler._shutdown_requested = True
+        handler._shutdown_requested = True
 
-        with patch('sys.exit') as mock_exit:
-            # Simulate receiving second signal
-            shutdown_handler._signal_handler(signal.SIGTERM, None)
+        # Mock graceful_shutdown to prevent coroutine creation
+        with patch.object(handler, 'graceful_shutdown') as mock_graceful_shutdown:
+            with patch('asyncio.create_task') as mock_create_task:
+                # Simulate receiving second signal - should be ignored
+                handler._signal_handler(signal.SIGTERM, None)
 
-            mock_exit.assert_called_once_with(1)
+                # Should still be in shutdown state but not create another task
+                assert handler.is_shutdown_requested()
+                
+                # Verify no new task was created for duplicate signal
+                mock_create_task.assert_not_called()
+                mock_graceful_shutdown.assert_not_called()
 
     @pytest.mark.asyncio
     async def test_graceful_shutdown_no_connections(self, shutdown_handler, mock_connection_manager, mock_notification_service):
@@ -84,20 +96,17 @@ class TestShutdownHandler:
         shutdown_handler._shutdown_requested = True
         shutdown_handler._shutdown_start_time = datetime.now(UTC)
 
-        # No active connections
-        mock_connection_manager.get_connection_count.return_value = 0
+        # Configure async mock properly to avoid warnings
+        mock_connection_manager.get_connection_count = AsyncMock(return_value=0)
+        mock_connection_manager.cleanup_stale_connections = AsyncMock(return_value=0)
 
-        with patch('sys.exit') as mock_exit:
-            await shutdown_handler.graceful_shutdown()
+        await shutdown_handler.graceful_shutdown()
 
-            # Verify services were stopped
-            mock_notification_service.stop_periodic_notifications.assert_called_once()
+        # Verify services were stopped
+        mock_notification_service.stop_periodic_notifications.assert_called_once()
 
-            # Verify system notification was sent
-            mock_notification_service.send_system_notification.assert_called_once()
-
-            # Verify exit was called
-            mock_exit.assert_called_once_with(0)
+        # Verify system notification was NOT sent (no connections)
+        mock_notification_service.send_system_notification.assert_not_called()
 
     @pytest.mark.asyncio
     async def test_graceful_shutdown_with_connections(self, shutdown_handler, mock_connection_manager, mock_notification_service):
@@ -106,22 +115,19 @@ class TestShutdownHandler:
         shutdown_handler._shutdown_requested = True
         shutdown_handler._shutdown_start_time = datetime.now(UTC)
 
-        # Mock connections that will close after first check
-        connection_counts = [2, 0]  # 2 connections, then 0
-        mock_connection_manager.get_connection_count.side_effect = connection_counts
+        # Configure async mocks properly to avoid warnings
+        connection_counts = [2, 2, 0, 0]
+        mock_connection_manager.get_connection_count = AsyncMock(side_effect=connection_counts)
+        mock_connection_manager.cleanup_stale_connections = AsyncMock(return_value=0)
 
-        with patch('sys.exit') as mock_exit:
-            with patch('asyncio.sleep'):
-                await shutdown_handler.graceful_shutdown()
+        with patch('asyncio.sleep'):
+            await shutdown_handler.graceful_shutdown()
 
-                # Verify services were stopped
-                mock_notification_service.stop_periodic_notifications.assert_called_once()
+            # Verify services were stopped
+            mock_notification_service.stop_periodic_notifications.assert_called_once()
 
-                # Verify system notification was sent
-                mock_notification_service.send_system_notification.assert_called_once()
-
-                # Verify exit was called
-                mock_exit.assert_called_once_with(0)
+            # Verify system notification was sent
+            mock_notification_service.send_system_notification.assert_called_once()
 
     @pytest.mark.asyncio
     async def test_wait_for_connections_or_timeout_no_connections(self, shutdown_handler, mock_connection_manager):
@@ -267,9 +273,11 @@ class TestShutdownHandler:
 
         # Make stop_services raise an exception
         mock_notification_service.stop_periodic_notifications.side_effect = Exception("Service error")
+        mock_connection_manager.get_connection_count = AsyncMock(return_value=0)
+        mock_connection_manager.cleanup_stale_connections = AsyncMock(return_value=0)
 
-        with patch('sys.exit') as mock_exit:
-            await shutdown_handler.graceful_shutdown()
+        # Should complete gracefully even with errors (errors are logged, not raised)
+        await shutdown_handler.graceful_shutdown()
 
-            # Should still exit even with errors
-            mock_exit.assert_called_once_with(0)
+        # Verify the service was attempted to be stopped
+        mock_notification_service.stop_periodic_notifications.assert_called_once()

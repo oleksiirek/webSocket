@@ -76,23 +76,24 @@ def main() -> None:
 
 def run_development_server() -> None:
     """
-    Run the development server with auto-reload and debug settings.
+    Run the development server with debug settings.
 
     This is a convenience function for development that overrides some
     production settings for a better development experience.
+    Note: Auto-reload is disabled to ensure proper graceful shutdown.
     """
     # Override settings for development
     dev_config = {
-        "app": "websocket_server.app:app",  # Use import string for reload
+        "app": app,  # Use app instance for better shutdown handling
         "host": settings.host,
         "port": settings.port,
-        "reload": True,
+        "reload": False,  # Disabled for proper shutdown handling
         "log_level": "debug",
         "access_log": True,
         "workers": 1,  # Always use 1 worker in development
     }
 
-    logger.info("Starting development server with auto-reload")
+    logger.info("Starting development server (reload disabled for proper shutdown)")
     uvicorn.run(**dev_config)
 
 

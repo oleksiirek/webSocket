@@ -64,10 +64,10 @@ class ShutdownHandler:
 
         if self._shutdown_requested:
             logger.warning(
-                f"Received {signal_name} during shutdown, forcing exit",
-                extra={"signal": signal_name, "force_exit": True}
+                f"Received {signal_name} during shutdown, ignoring duplicate signal",
+                extra={"signal": signal_name, "duplicate_signal": True}
             )
-            sys.exit(1)
+            return
 
         logger.info(
             f"Received {signal_name}, initiating graceful shutdown",
@@ -85,8 +85,9 @@ class ShutdownHandler:
         Perform graceful shutdown sequence.
         """
         if not self._shutdown_requested:
-            logger.warning("Graceful shutdown called without shutdown request")
-            return
+            logger.info("Graceful shutdown initiated by application lifespan")
+            self._shutdown_requested = True
+            self._shutdown_start_time = datetime.now(UTC)
 
         logger.info(
             "Starting graceful shutdown sequence",
@@ -116,9 +117,7 @@ class ShutdownHandler:
                 f"Error during graceful shutdown: {e}",
                 extra={"error": str(e)}
             )
-        finally:
-            # Ensure we exit
-            sys.exit(0)
+            raise
 
     async def wait_for_connections_or_timeout(self) -> None:
         """
