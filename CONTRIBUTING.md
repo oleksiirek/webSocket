@@ -7,8 +7,7 @@ Thank you for your interest in contributing to the WebSocket Notification Server
 1. **Clone the repository**:
    ```bash
    git clone <repository-url>
-   cd websocket-notification-server
-   ```
+   cd webSocket   ```
 
 2. **Set up Python environment**:
    ```bash

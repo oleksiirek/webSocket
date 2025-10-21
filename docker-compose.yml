@@ -6,8 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
       target: production
-    container_name: websocket-notification-server
-    ports:
+    container_name: webSocket    ports:
       - "8000:8000"
     environment:
       - HOST=0.0.0.0

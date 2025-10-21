@@ -259,8 +259,7 @@ services:
 
 #### Docker Run
 ```bash
-docker run -e HOST=0.0.0.0 -e PORT=8000 -e WORKERS=2 websocket-notification-server
-```
+docker run -e HOST=0.0.0.0 -e PORT=8000 -e WORKERS=2 webSocket```
 
 #### .env File with Docker
 ```bash

@@ -5,8 +5,7 @@
 ### 1. Clone and Setup
 ```bash
 git clone <your-repository-url>
-cd websocket-notification-server
-python -m venv .venv
+cd webSocketpython -m venv .venv
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 make install
 ```

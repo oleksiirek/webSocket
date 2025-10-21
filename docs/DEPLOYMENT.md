@@ -19,8 +19,7 @@ This guide covers various deployment scenarios for the WebSocket Notification Se
 1. **Clone and setup**:
    ```bash
    git clone <repository-url>
-   cd websocket-notification-server
-   cp .env.example .env
+   cd webSocket   cp .env.example .env
    pip install -r requirements.txt
    ```
 
@@ -64,7 +63,7 @@ docker run -d \
   -e WORKERS=2 \
   -e MAX_CONNECTIONS=1000 \
   -v $(pwd)/logs:/app/logs \
-  websocket-notification-server
+  webSocket
 ```
 
 #### With Environment File
@@ -86,8 +85,7 @@ docker run -d \
   -p 8000:8000 \
   --env-file .env.prod \
   -v $(pwd)/logs:/app/logs \
-  websocket-notification-server
-```
+  webSocket```
 
 ### Docker Compose
 
